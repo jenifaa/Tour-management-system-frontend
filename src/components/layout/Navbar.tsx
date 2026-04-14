@@ -3,8 +3,19 @@ import { Menu } from "lucide-react";
 import { useState } from "react";
 import { ModeToggle } from "./MoodToggler";
 import { Link } from "react-router";
+import {
+  authApi,
+  useLogoutMutation,
+  useUserInfoQuery,
+} from "@/redux/features/auth/auth.api";
+
+import { useAppDispatch } from "@/redux/hook";
 
 export default function Navbar() {
+  const { data } = useUserInfoQuery(undefined);
+  const [logout] = useLogoutMutation();
+  const dispatch = useAppDispatch()
+ 
   const [open, setOpen] = useState(false);
 
   const links = (
@@ -24,6 +35,12 @@ export default function Navbar() {
     </>
   );
 
+
+   const handleLogout = () => {
+    logout(undefined);
+    dispatch(authApi.util.resetApiState())
+  };
+
   return (
     <nav className="w-full border-b">
       <div className="max-w-6xl mx-auto flex items-center justify-between px-4 py-3">
@@ -33,12 +50,18 @@ export default function Navbar() {
         {/* Desktop Menu */}
         <div className="hidden md:flex gap-6 items-center">
           {links}
-          <Button>
-            <Link to="/login" className="w-full">
-              Login
-            </Link>
-          </Button>
-          <ModeToggle />
+          <div>
+            {data?.data?.email && <Button onClick={handleLogout} variant="outline">LogOut</Button>}
+            {!data?.data?.email && (
+              <Button>
+                <Link to="/login" className="w-full">
+                  Login
+                </Link>
+              </Button>
+            )}
+
+            <ModeToggle />
+          </div>
         </div>
 
         {/* Mobile Right Side */}
@@ -55,9 +78,14 @@ export default function Navbar() {
       {open && (
         <div className="md:hidden px-4 pb-4 flex flex-col gap-3">
           {links}
-          <Link to="/login" className="w-full">
-            Login
-          </Link>
+          {data?.data?.email && <Button variant="outline">LogOut</Button>}
+          {!data?.data?.email && (
+            <Button>
+              <Link to="/login" className="w-full">
+                Login
+              </Link>
+            </Button>
+          )}
         </div>
       )}
     </nav>
