@@ -1,4 +1,4 @@
-import * as React from "react"
+import * as React from "react";
 
 import {
   Sidebar,
@@ -11,48 +11,18 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-} from "@/components/ui/sidebar"
-import { Link } from "react-router"
+} from "@/components/ui/sidebar";
+import { Link } from "react-router";
+import { adminSidebarItems } from "@/routes/adminSidebarItems";
 
 // This is sample data.
 const data = {
-
-  navMain: [
-    {
-      title: "Dashboard",
-      url: "#",
-      items: [
-        {
-          title: "Analytics",
-          url: "/admin/analytics",
-        },
-      
-      ],
-    },
-    {
-      title: "Tour Management",
-      url: "#",
-      items: [
-        {
-          title: "Add Tour",
-          url: "/admin/add-tour",
-        },
-        {
-          title: "Add Tour Type",
-          url: "/admin/add-tour-type",
-        },
-      
-      ],
-    },
-  
-  ],
-}
+  navMain: adminSidebarItems,
+};
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props}>
-      <SidebarHeader>
-        {/* //logo will be here */}
-      </SidebarHeader>
+      <SidebarHeader>{/* //logo will be here */}</SidebarHeader>
       <SidebarContent>
         {data.navMain.map((item) => (
           <SidebarGroup key={item.title}>
@@ -76,5 +46,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarContent>
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }
