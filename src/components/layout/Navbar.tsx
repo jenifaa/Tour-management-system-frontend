@@ -10,35 +10,41 @@ import {
 } from "@/redux/features/auth/auth.api";
 
 import { useAppDispatch } from "@/redux/hook";
+import { role } from "@/constants/role";
 
 export default function Navbar() {
   const { data } = useUserInfoQuery(undefined);
   const [logout] = useLogoutMutation();
-  const dispatch = useAppDispatch()
- 
+  const dispatch = useAppDispatch();
+
   const [open, setOpen] = useState(false);
 
   const links = (
     <>
-      <Link to="/" className="hover:text-blue-600">
+      <Link to="/" role="PUBLIC" className="hover:text-blue-600">
         Home
       </Link>
-      <Link to="/about" className="hover:text-blue-600">
+      <Link to="/about" role="PUBLIC" className="hover:text-blue-600">
         About
       </Link>
-      <Link to="/services" className="hover:text-blue-600">
+      <Link to="/services" role="PUBLIC" className="hover:text-blue-600">
         Services
       </Link>
-      <Link to="/contact" className="hover:text-blue-600">
+      <Link to="/contact" role="PUBLIC" className="hover:text-blue-600">
         Contact
+      </Link>
+      <Link to="/admin" role={role.admin} className="hover:text-blue-600">
+        Dashboard
+      </Link>
+      <Link to="/user" role={role.user} className="hover:text-blue-600">
+        Dashboard
       </Link>
     </>
   );
 
-
-   const handleLogout = () => {
+  const handleLogout = () => {
     logout(undefined);
-    dispatch(authApi.util.resetApiState())
+    dispatch(authApi.util.resetApiState());
   };
 
   return (
@@ -51,7 +57,11 @@ export default function Navbar() {
         <div className="hidden md:flex gap-6 items-center">
           {links}
           <div>
-            {data?.data?.email && <Button onClick={handleLogout} variant="outline">LogOut</Button>}
+            {data?.data?.email && (
+              <Button onClick={handleLogout} variant="outline">
+                LogOut
+              </Button>
+            )}
             {!data?.data?.email && (
               <Button>
                 <Link to="/login" className="w-full">
