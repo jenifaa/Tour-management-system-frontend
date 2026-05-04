@@ -17,6 +17,7 @@ export default function Navbar() {
   const [logout] = useLogoutMutation();
   const dispatch = useAppDispatch();
 
+  const userRole = data?.data?.role;
   const [open, setOpen] = useState(false);
 
   // const links = (
@@ -48,6 +49,7 @@ export default function Navbar() {
     { to: "/services", label: "Services", role: "PUBLIC" },
     { to: "/contact", label: "Contact", role: "PUBLIC" },
     { to: "/admin", label: "Dashboard", role: role.admin },
+    { to: "/admin", label: "Dashboard", role: role.superAdmin },
     { to: "/user", label: "Dashboard", role: role.user },
   ];
   const handleLogout = () => {
@@ -63,13 +65,25 @@ export default function Navbar() {
 
         {/* Desktop Menu */}
         <div className="hidden md:flex gap-6 items-center">
-          {navLinks
-            .filter((link) => link.role === "PUBLIC")
-            .map((link, index) => (
-              <Link key={index} to={link.to} className="hover:text-blue-600">
-                {link.label}
-              </Link>
-            ))}
+          <>
+            {/* {navLinks
+              .filter((link) => link.role === "PUBLIC")
+              .map((link, index) => (
+                <Link key={index} to={link.to} className="hover:text-blue-600">
+                  {link.label}
+                </Link>
+              ))} */}
+
+            {navLinks
+              .filter(
+                (link) => link.role === "PUBLIC" || link.role === userRole,
+              )
+              .map((link, index) => (
+                <Link key={index} to={link.to} className="hover:text-blue-600">
+                  {link.label}
+                </Link>
+              ))}
+          </>
 
           <div>
             {data?.data?.email && (
