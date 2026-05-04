@@ -19,29 +19,37 @@ export default function Navbar() {
 
   const [open, setOpen] = useState(false);
 
-  const links = (
-    <>
-      <Link to="/" role="PUBLIC" className="hover:text-blue-600">
-        Home
-      </Link>
-      <Link to="/about" role="PUBLIC" className="hover:text-blue-600">
-        About
-      </Link>
-      <Link to="/services" role="PUBLIC" className="hover:text-blue-600">
-        Services
-      </Link>
-      <Link to="/contact" role="PUBLIC" className="hover:text-blue-600">
-        Contact
-      </Link>
-      <Link to="/admin" role={role.admin} className="hover:text-blue-600">
-        Dashboard
-      </Link>
-      <Link to="/user" role={role.user} className="hover:text-blue-600">
-        Dashboard
-      </Link>
-    </>
-  );
+  // const links = (
+  //   <>
+  //     <Link to="/" role="PUBLIC" className="hover:text-blue-600">
+  //       Home
+  //     </Link>
+  //     <Link to="/about" role="PUBLIC" className="hover:text-blue-600">
+  //       About
+  //     </Link>
+  //     <Link to="/services" role="PUBLIC" className="hover:text-blue-600">
+  //       Services
+  //     </Link>
+  //     <Link to="/contact" role="PUBLIC" className="hover:text-blue-600">
+  //       Contact
+  //     </Link>
+  //     <Link to="/admin" role={role.admin} className="hover:text-blue-600">
+  //       Dashboard
+  //     </Link>
+  //     <Link to="/user" role={role.user} className="hover:text-blue-600">
+  //       Dashboard
+  //     </Link>
+  //   </>
+  // );
 
+  const navLinks = [
+    { to: "/", label: "Home", role: "PUBLIC" },
+    { to: "/about", label: "About", role: "PUBLIC" },
+    { to: "/services", label: "Services", role: "PUBLIC" },
+    { to: "/contact", label: "Contact", role: "PUBLIC" },
+    { to: "/admin", label: "Dashboard", role: role.admin },
+    { to: "/user", label: "Dashboard", role: role.user },
+  ];
   const handleLogout = () => {
     logout(undefined);
     dispatch(authApi.util.resetApiState());
@@ -55,7 +63,14 @@ export default function Navbar() {
 
         {/* Desktop Menu */}
         <div className="hidden md:flex gap-6 items-center">
-          {links}
+          {navLinks
+            .filter((link) => link.role === "PUBLIC")
+            .map((link, index) => (
+              <Link key={index} to={link.to} className="hover:text-blue-600">
+                {link.label}
+              </Link>
+            ))}
+
           <div>
             {data?.data?.email && (
               <Button onClick={handleLogout} variant="outline">
@@ -87,7 +102,13 @@ export default function Navbar() {
       {/* Mobile Menu */}
       {open && (
         <div className="md:hidden px-4 pb-4 flex flex-col gap-3">
-          {links}
+          {navLinks
+            .filter((link) => link.role === "PUBLIC")
+            .map((link, index) => (
+              <Link key={index} to={link.to} className="hover:text-blue-600">
+                {link.label}
+              </Link>
+            ))}
           {data?.data?.email && <Button variant="outline">LogOut</Button>}
           {!data?.data?.email && (
             <Button>
