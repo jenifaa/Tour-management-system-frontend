@@ -117,7 +117,7 @@ export default function Navbar() {
       {open && (
         <div className="md:hidden px-4 pb-4 flex flex-col gap-3">
           {navLinks
-            .filter((link) => link.role === "PUBLIC")
+            .filter((link) => link.role === "PUBLIC" || link.role === userRole)
             .map((link, index) => (
               <Link key={index} to={link.to} className="hover:text-blue-600">
                 {link.label}

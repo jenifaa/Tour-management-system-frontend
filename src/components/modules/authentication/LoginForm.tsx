@@ -27,6 +27,8 @@ export default function LoginForm({
     try {
       const res = await login(data).unwrap();
       console.log(res);
+      navigate("/");
+      toast.success("Login successful");
     } catch (err: any) {
       console.error(err);
 
