@@ -9,16 +9,39 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Field, FieldGroup } from "@/components/ui/field";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { useAddTourTypeMutation } from "@/redux/features/Tour/tour.api";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 export function AddTourTypeModal() {
+  const form = useForm();
+
+  const [addTourType] = useAddTourTypeMutation();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onSubmit = async (data: any) => {
+    const res = await addTourType({ name: data.name }).unwrap();
+    if (res.success) {
+      toast.success("Tour Type Added Successfully");
+    }
+    console.log(res);
+  };
+
   return (
     <Dialog>
       <form>
-        <DialogTrigger >
-          <Button variant="outline">Open Dialog</Button>
+        <DialogTrigger>
+          <Button className="rounded-md border-2 px-4 py-4">
+            Add Tour Type
+          </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-sm">
           <DialogHeader>
@@ -27,21 +50,40 @@ export function AddTourTypeModal() {
               Enter the details for the new tour type.
             </DialogDescription>
           </DialogHeader>
-          <FieldGroup>
-            <Field>
-              <Label htmlFor="name-1">Name</Label>
-              <Input id="name-1" name="name" defaultValue="Pedro Duarte" />
-            </Field>
-            <Field>
-              <Label htmlFor="username-1">Username</Label>
-              <Input id="username-1" name="username" defaultValue="@peduarte" />
-            </Field>
-          </FieldGroup>
+
+          <Form {...form}>
+            <form
+              id="add-tour-type"
+              className="px-6"
+              onSubmit={form.handleSubmit(onSubmit)}
+            >
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Tour Type Name</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Add Type Name"
+                        {...field}
+                        value={field.value || ""}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </form>
+          </Form>
+
           <DialogFooter>
             <DialogClose>
-              <Button variant="outline">Cancel</Button>
+              <Button className="rounded-md border-2 px-4 py-4">Cancel</Button>
             </DialogClose>
-            <Button type="submit">Save changes</Button>
+            <Button type="submit" form="add-tour-type">
+              Save changes
+            </Button>
           </DialogFooter>
         </DialogContent>
       </form>

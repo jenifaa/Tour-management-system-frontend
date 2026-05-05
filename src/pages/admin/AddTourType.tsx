@@ -13,6 +13,7 @@ import { Trash2 } from "lucide-react";
 import { AddTourTypeModal } from "@/components/modules/Admin/Tour/TourType/AddTourTypeModal";
 function AddTourType() {
   const { data } = useGetTourTypesQuery(undefined);
+  
   console.log(data);
 
   return (
