@@ -20,11 +20,15 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useState } from "react";
 
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
+// import { toast } from "sonner";
 
 export function AddDivisionModal() {
+  const [image, setImage] = useState<File | null>(null);
+
+  console.log("Inside add division",image);
   const form = useForm({
     defaultValues: {
       name: "",
@@ -33,13 +37,13 @@ export function AddDivisionModal() {
   });
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const onSubmit = async (data: any) => {
+  const onSubmit = async (data: any) => {
     //   const res = await addTourType({ name: data.name }).unwrap();
     //   if (res.success) {
     //     toast.success("Tour Type Added Successfully");
     //   }
-      console.log(data);
-    };
+    console.log(data);
+  };
 
   return (
     <Dialog>
@@ -67,11 +71,7 @@ export function AddDivisionModal() {
                 <FormItem>
                   <FormLabel>Division Name</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Add Division Name"
-                      {...field}
-    
-                    />
+                    <Input placeholder="Add Division Name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -91,7 +91,7 @@ export function AddDivisionModal() {
               )}
             />
           </form>
-          <SingleImageUploader></SingleImageUploader>
+          <SingleImageUploader onChange={setImage} />
         </Form>
 
         <DialogFooter>
