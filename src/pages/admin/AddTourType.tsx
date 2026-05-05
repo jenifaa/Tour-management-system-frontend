@@ -13,7 +13,7 @@ function AddTourType() {
   console.log(data);
 
   return (
-    <div>
+    <div className="w-full max-w-7xl mx-auto px-5">
       <Table>
         <TableCaption>A list of your recent invoices.</TableCaption>
         <TableHeader>
