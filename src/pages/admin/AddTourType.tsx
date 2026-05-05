@@ -1,8 +1,10 @@
+import { useGetTourTypesQuery } from "@/redux/features/Tour/tour.api";
 
 function AddTourType() {
-  return (
-    <div>AddTourType</div>
-  )
+  const { data } = useGetTourTypesQuery(undefined);
+  console.log(data);
+
+  return <div>AddTourType</div>;
 }
 
-export default AddTourType
+export default AddTourType;
