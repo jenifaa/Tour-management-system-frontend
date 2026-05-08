@@ -35,6 +35,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 import { cn } from "@/lib/utils";
 import { useGetDivisionsQuery } from "@/redux/features/division/division.api";
+import { useGetTourTypesQuery } from "@/redux/features/Tour/tour.api";
 
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -70,7 +71,7 @@ export default function AddTour() {
 
   const { data: divisionData, isLoading: divisionLoading } =
     useGetDivisionsQuery(undefined);
-
+ const { data: tourTypeData } = useGetTourTypesQuery(undefined);
 
   const divisionOptions = divisionData?.map(
     (item: { _id: string; name: string }) => ({
@@ -79,12 +80,12 @@ export default function AddTour() {
     })
   );
 
-  // const tourTypeOptions = tourTypeData?.data?.map(
-  //   (tourType: { _id: string; name: string }) => ({
-  //     value: tourType._id,
-  //     label: tourType.name,
-  //   })
-  // );
+  const tourTypeOptions = tourTypeData?.map(
+    (tourType: { _id: string; name: string }) => ({
+      value: tourType._id,
+      label: tourType.name,
+    })
+  );
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -349,7 +350,7 @@ export default function AddTour() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {/* {tourTypeOptions?.map(
+                          {tourTypeOptions?.map(
                             (option: { value: string; label: string }) => (
                               <SelectItem
                                 key={option.value}
@@ -358,7 +359,7 @@ export default function AddTour() {
                                 {option.label}
                               </SelectItem>
                             )
-                          )} */}
+                          )}
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -508,7 +509,7 @@ export default function AddTour() {
                 <div className="flex justify-between">
                   <p className="font-semibold">Included</p>
                   <Button
-                    type="button"
+                    // type="button"
                     variant="outline"
                     size="icon"
                     onClick={() => appendIncluded({ value: "" })}
@@ -537,7 +538,7 @@ export default function AddTour() {
                         variant="destructive"
                         className="bg-red-700!"
                         size="icon"
-                        type="button"
+                        // type="button"
                       >
                         <Trash2 />
                       </Button>
@@ -550,7 +551,7 @@ export default function AddTour() {
                 <div className="flex justify-between">
                   <p className="font-semibold">Excluded</p>
                   <Button
-                    type="button"
+                    // type="button"
                     variant="outline"
                     size="icon"
                     onClick={() => appendExcluded({ value: "" })}
@@ -579,7 +580,7 @@ export default function AddTour() {
                         variant="destructive"
                         className="bg-red-700!"
                         size="icon"
-                        type="button"
+                        // type="button"
                       >
                         <Trash2 />
                       </Button>
@@ -592,7 +593,7 @@ export default function AddTour() {
                 <div className="flex justify-between">
                   <p className="font-semibold">Amenities</p>
                   <Button
-                    type="button"
+                    // type="button"
                     variant="outline"
                     size="icon"
                     onClick={() => appendAmenities({ value: "" })}
@@ -621,7 +622,7 @@ export default function AddTour() {
                         variant="destructive"
                         className="bg-red-700!"
                         size="icon"
-                        type="button"
+                        // type="button"
                       >
                         <Trash2 />
                       </Button>
@@ -634,7 +635,7 @@ export default function AddTour() {
                 <div className="flex justify-between">
                   <p className="font-semibold">Tour Plan</p>
                   <Button
-                    type="button"
+                    // type="button"
                     variant="outline"
                     size="icon"
                     onClick={() => appendTourPlan({ value: "" })}
@@ -663,7 +664,7 @@ export default function AddTour() {
                         variant="destructive"
                         className="bg-red-700!"
                         size="icon"
-                        type="button"
+                        // type="button"
                       >
                         <Trash2 />
                       </Button>
