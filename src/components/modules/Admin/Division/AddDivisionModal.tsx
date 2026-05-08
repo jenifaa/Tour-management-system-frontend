@@ -41,7 +41,9 @@ export function AddDivisionModal() {
     const formData = new FormData();
     formData.append("data", JSON.stringify(data));
     formData.append("file", image as File);
-   
+    if (image) {
+      formData.append("image", image);
+    }
     console.log(formData);
   };
 
