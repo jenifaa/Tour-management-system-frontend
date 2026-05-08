@@ -28,7 +28,7 @@ import { useForm } from "react-hook-form";
 export function AddDivisionModal() {
   const [image, setImage] = useState<File | null>(null);
 
-  console.log("Inside add division",image);
+  console.log("Inside add division", image);
   const form = useForm({
     defaultValues: {
       name: "",
@@ -38,11 +38,11 @@ export function AddDivisionModal() {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onSubmit = async (data: any) => {
-    //   const res = await addTourType({ name: data.name }).unwrap();
-    //   if (res.success) {
-    //     toast.success("Tour Type Added Successfully");
-    //   }
-    console.log(data);
+    const formData = new FormData();
+    formData.append("data", JSON.stringify(data));
+    formData.append("file", image as File);
+   
+    console.log(formData);
   };
 
   return (
