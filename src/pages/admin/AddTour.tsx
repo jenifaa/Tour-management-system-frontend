@@ -33,6 +33,7 @@ import {
 } from "@/components/ui/select";
 
 import { Textarea } from "@/components/ui/textarea";
+import type { FileMetadata } from "@/hooks/use-file-upload";
 
 import { cn } from "@/lib/utils";
 import { useGetDivisionsQuery } from "@/redux/features/division/division.api";
@@ -71,6 +72,7 @@ const formSchema = z.object({
 export default function AddTour() {
   const [images, setImages] = useState<(File | FileMetadata)[] | []>([]);
 
+  console.log(images);
   const { data: divisionData, isLoading: divisionLoading } =
     useGetDivisionsQuery(undefined);
  const { data: tourTypeData } = useGetTourTypesQuery(undefined);
