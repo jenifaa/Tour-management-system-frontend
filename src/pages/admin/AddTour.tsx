@@ -1,4 +1,5 @@
 
+import MultipleImageUploader from "@/components/MultipleImageUploader";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -41,6 +42,7 @@ import { useGetTourTypesQuery } from "@/redux/features/Tour/tour.api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format, formatISO } from "date-fns";
 import { CalendarIcon, Plus, Trash2 } from "lucide-react";
+import { useState } from "react";
 
 
 import { useFieldArray, useForm } from "react-hook-form";
@@ -67,7 +69,7 @@ const formSchema = z.object({
 });
 
 export default function AddTour() {
-  // const [images, setImages] = useState<(File | FileMetadata)[] | []>([]);
+  const [images, setImages] = useState<(File | FileMetadata)[] | []>([]);
 
   const { data: divisionData, isLoading: divisionLoading } =
     useGetDivisionsQuery(undefined);
@@ -86,6 +88,7 @@ export default function AddTour() {
       label: tourType.name,
     })
   );
+ 
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -500,9 +503,9 @@ export default function AddTour() {
                     </FormItem>
                   )}
                 />
-                {/* <div className="flex-1 mt-5">
+                <div className="flex-1 mt-5">
                   <MultipleImageUploader onChange={setImages} />
-                </div> */}
+                </div>
               </div>
               <div className="border-t border-muted w-full "></div>
               <div>
