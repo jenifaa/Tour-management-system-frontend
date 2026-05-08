@@ -37,7 +37,7 @@ import type { FileMetadata } from "@/hooks/use-file-upload";
 
 import { cn } from "@/lib/utils";
 import { useGetDivisionsQuery } from "@/redux/features/division/division.api";
-import { useGetTourTypesQuery } from "@/redux/features/Tour/tour.api";
+import { useAddTourMutation, useGetTourTypesQuery } from "@/redux/features/Tour/tour.api";
 
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -47,6 +47,7 @@ import { useState } from "react";
 
 
 import { useFieldArray, useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 import z from "zod";
 
@@ -72,7 +73,8 @@ const formSchema = z.object({
 export default function AddTour() {
   const [images, setImages] = useState<(File | FileMetadata)[] | []>([]);
 
-  console.log(images);
+
+  const [addTour] = useAddTourMutation()
   const { data: divisionData, isLoading: divisionLoading } =
     useGetDivisionsQuery(undefined);
  const { data: tourTypeData } = useGetTourTypesQuery(undefined);
@@ -101,7 +103,7 @@ export default function AddTour() {
       location: "Cox's Bazar",
       costFrom: "15000",
       startDate: new Date(),
-      // endDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days later
+      endDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days later
       departureLocation: "Dhaka",
       arrivalLocation: "Cox's Bazar",
       included: [
@@ -170,12 +172,12 @@ export default function AddTour() {
   });
 
   const handleSubmit = async (data: z.infer<typeof formSchema>) => {
-    // const toastId = toast.loading("Creating tour....");
+    const toastId = toast.loading("Creating tour....");
 
-    // if (images.length === 0) {
-    //   toast.error("Please add some images", { id: toastId });
-    //   return;
-    // }
+    if (images.length === 0) {
+      toast.error("Please add some images", { id: toastId });
+      return;
+    }
 
     const tourData = {
       ...data,
@@ -205,23 +207,23 @@ export default function AddTour() {
     const formData = new FormData();
 
     formData.append("data", JSON.stringify(tourData));
-    // images.forEach((image) => formData.append("files", image as File));
+    images.forEach((image) => formData.append("files", image as File));
 
-    // try {
-    //   const res = await addTour(formData).unwrap();
+    try {
+      const res = await addTour(formData).unwrap();
 
-    //   if (res.success) {
-    //     toast.success("Tour created", { id: toastId });
-    //     form.reset();
-    //   } else {
-    //     toast.error("Something went wrong", { id: toastId });
-    //   }
-    // } catch (err: unknown) {
-    //   console.error(err);
-    //   toast.error((err as IErrorResponse).message || "Something went wrong", {
-    //     id: toastId,
-    //   });
-    // }
+      if (res.success) {
+        toast.success("Tour created", { id: toastId });
+        form.reset();
+      } else {
+        toast.error("Something went wrong", { id: toastId });
+      }
+    } catch (err: unknown) {
+      console.error(err);
+      // toast.error((err as IErrorResponse).message || "Something went wrong", {
+      //   id: toastId,
+      // });
+    }
   };
 
   return (
@@ -408,7 +410,7 @@ export default function AddTour() {
                     <FormItem className="flex flex-col flex-1">
                       <FormLabel>Start Date</FormLabel>
                       <Popover>
-                        <PopoverTrigger>
+                        <PopoverTrigger >
                           <FormControl>
                             <Button
                               variant={"outline"}
@@ -416,6 +418,7 @@ export default function AddTour() {
                                 "w-full pl-3 text-left font-normal",
                                 !field.value && "text-muted-foreground"
                               )}
+                              type="button"
                             >
                               {field.value ? (
                                 format(field.value, "PPP")
@@ -460,6 +463,7 @@ export default function AddTour() {
                                 "w-full pl-3 text-left font-normal",
                                 !field.value && "text-muted-foreground"
                               )}
+                              type="button"
                             >
                               {field.value ? (
                                 format(field.value, "PPP")
@@ -514,7 +518,7 @@ export default function AddTour() {
                 <div className="flex justify-between">
                   <p className="font-semibold">Included</p>
                   <Button
-                    // type="button"
+                    type="button"
                     variant="outline"
                     size="icon"
                     onClick={() => appendIncluded({ value: "" })}
@@ -543,7 +547,7 @@ export default function AddTour() {
                         variant="destructive"
                         className="bg-red-700!"
                         size="icon"
-                        // type="button"
+                        type="button"
                       >
                         <Trash2 />
                       </Button>
@@ -556,7 +560,7 @@ export default function AddTour() {
                 <div className="flex justify-between">
                   <p className="font-semibold">Excluded</p>
                   <Button
-                    // type="button"
+                    type="button"
                     variant="outline"
                     size="icon"
                     onClick={() => appendExcluded({ value: "" })}
@@ -585,7 +589,7 @@ export default function AddTour() {
                         variant="destructive"
                         className="bg-red-700!"
                         size="icon"
-                        // type="button"
+                        type="button"
                       >
                         <Trash2 />
                       </Button>
@@ -598,7 +602,7 @@ export default function AddTour() {
                 <div className="flex justify-between">
                   <p className="font-semibold">Amenities</p>
                   <Button
-                    // type="button"
+                    type="button"
                     variant="outline"
                     size="icon"
                     onClick={() => appendAmenities({ value: "" })}
@@ -627,7 +631,7 @@ export default function AddTour() {
                         variant="destructive"
                         className="bg-red-700!"
                         size="icon"
-                        // type="button"
+                        type="button"
                       >
                         <Trash2 />
                       </Button>
@@ -640,7 +644,7 @@ export default function AddTour() {
                 <div className="flex justify-between">
                   <p className="font-semibold">Tour Plan</p>
                   <Button
-                    // type="button"
+                    type="button"
                     variant="outline"
                     size="icon"
                     onClick={() => appendTourPlan({ value: "" })}
@@ -669,7 +673,7 @@ export default function AddTour() {
                         variant="destructive"
                         className="bg-red-700!"
                         size="icon"
-                        // type="button"
+                        type="button"
                       >
                         <Trash2 />
                       </Button>
