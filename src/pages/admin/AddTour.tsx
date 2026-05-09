@@ -1,4 +1,3 @@
-
 import MultipleImageUploader from "@/components/MultipleImageUploader";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -37,14 +36,15 @@ import type { FileMetadata } from "@/hooks/use-file-upload";
 
 import { cn } from "@/lib/utils";
 import { useGetDivisionsQuery } from "@/redux/features/division/division.api";
-import { useAddTourMutation, useGetTourTypesQuery } from "@/redux/features/Tour/tour.api";
-
+import {
+  useAddTourMutation,
+  useGetTourTypesQuery,
+} from "@/redux/features/Tour/tour.api";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format, formatISO } from "date-fns";
 import { CalendarIcon, Plus, Trash2 } from "lucide-react";
-import { useState } from "react";
-
+import { useMemo, useState } from "react";
 
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -73,27 +73,36 @@ const formSchema = z.object({
 export default function AddTour() {
   const [images, setImages] = useState<(File | FileMetadata)[] | []>([]);
 
-
-  const [addTour] = useAddTourMutation()
+  const [addTour] = useAddTourMutation();
   const { data: divisionData, isLoading: divisionLoading } =
     useGetDivisionsQuery(undefined);
- const { data: tourTypeData } = useGetTourTypesQuery(undefined);
+  const { data: tourTypeData } = useGetTourTypesQuery(undefined);
 
   const divisionOptions = divisionData?.map(
     (item: { _id: string; name: string }) => ({
       value: item._id,
       label: item.name,
-    })
+    }),
   );
 
   const tourTypeOptions = tourTypeData?.map(
     (tourType: { _id: string; name: string }) => ({
       value: tourType._id,
       label: tourType.name,
-    })
+    }),
   );
- 
 
+  const defaultDates = useMemo(() => {
+    const start = new Date();
+
+    const end = new Date(start);
+    end.setDate(end.getDate() + 3);
+
+    return {
+      startDate: start,
+      endDate: end,
+    };
+  }, []);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -102,8 +111,8 @@ export default function AddTour() {
         "Experience the world's longest natural sea beach with golden sandy shores, crystal clear waters, and breathtaking sunsets. Enjoy beach activities, local seafood, and explore nearby attractions including Himchari National Park and Inani Beach.",
       location: "Cox's Bazar",
       costFrom: "15000",
-      startDate: new Date(),
-      endDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days later
+      startDate: defaultDates.startDate,
+      endDate: defaultDates.endDate,
       departureLocation: "Dhaka",
       arrivalLocation: "Cox's Bazar",
       included: [
@@ -211,7 +220,7 @@ export default function AddTour() {
 
     try {
       const res = await addTour(formData).unwrap();
-
+      console.log(res);
       if (res.success) {
         toast.success("Tour created", { id: toastId });
         form.reset();
@@ -332,7 +341,7 @@ export default function AddTour() {
                               <SelectItem key={item.value} value={item.value}>
                                 {item.label}
                               </SelectItem>
-                            )
+                            ),
                           )}
                         </SelectContent>
                       </Select>
@@ -365,7 +374,7 @@ export default function AddTour() {
                               >
                                 {option.label}
                               </SelectItem>
-                            )
+                            ),
                           )}
                         </SelectContent>
                       </Select>
@@ -410,13 +419,13 @@ export default function AddTour() {
                     <FormItem className="flex flex-col flex-1">
                       <FormLabel>Start Date</FormLabel>
                       <Popover>
-                        <PopoverTrigger >
+                        <PopoverTrigger>
                           <FormControl>
                             <Button
                               variant={"outline"}
                               className={cn(
                                 "w-full pl-3 text-left font-normal",
-                                !field.value && "text-muted-foreground"
+                                !field.value && "text-muted-foreground",
                               )}
                               type="button"
                             >
@@ -437,7 +446,7 @@ export default function AddTour() {
                             disabled={(date) =>
                               date <
                               new Date(
-                                new Date().setDate(new Date().getDate() - 1)
+                                new Date().setDate(new Date().getDate() - 1),
                               )
                             }
                             captionLayout="dropdown"
@@ -455,13 +464,13 @@ export default function AddTour() {
                     <FormItem className="flex flex-col flex-1">
                       <FormLabel>End Date</FormLabel>
                       <Popover>
-                        <PopoverTrigger >
+                        <PopoverTrigger>
                           <FormControl>
                             <Button
                               variant={"outline"}
                               className={cn(
                                 "w-full pl-3 text-left font-normal",
-                                !field.value && "text-muted-foreground"
+                                !field.value && "text-muted-foreground",
                               )}
                               type="button"
                             >
@@ -482,7 +491,7 @@ export default function AddTour() {
                             disabled={(date) =>
                               date <
                               new Date(
-                                new Date().setDate(new Date().getDate() - 1)
+                                new Date().setDate(new Date().getDate() - 1),
                               )
                             }
                             captionLayout="dropdown"
@@ -545,7 +554,7 @@ export default function AddTour() {
                       <Button
                         onClick={() => removeIncluded(index)}
                         variant="destructive"
-                        className="bg-red-700!"
+                        // className="bg-red-700!"
                         size="icon"
                         type="button"
                       >
@@ -587,7 +596,7 @@ export default function AddTour() {
                       <Button
                         onClick={() => removeExcluded(index)}
                         variant="destructive"
-                        className="bg-red-700!"
+                        // className="bg-red-700!"
                         size="icon"
                         type="button"
                       >
@@ -629,7 +638,7 @@ export default function AddTour() {
                       <Button
                         onClick={() => removeAmenities(index)}
                         variant="destructive"
-                        className="bg-red-700!"
+                        // className="bg-red-700!"
                         size="icon"
                         type="button"
                       >
@@ -671,7 +680,7 @@ export default function AddTour() {
                       <Button
                         onClick={() => removeTourPlan(index)}
                         variant="destructive"
-                        className="bg-red-700!"
+                        // className="bg-red-700!"
                         size="icon"
                         type="button"
                       >
