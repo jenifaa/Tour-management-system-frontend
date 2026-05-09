@@ -40,6 +40,7 @@ import {
   useAddTourMutation,
   useGetTourTypesQuery,
 } from "@/redux/features/Tour/tour.api";
+import type { IErrorResponse } from "@/types";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format, formatISO } from "date-fns";
@@ -229,9 +230,9 @@ export default function AddTour() {
       }
     } catch (err: unknown) {
       console.error(err);
-      // toast.error((err as IErrorResponse).message || "Something went wrong", {
-      //   id: toastId,
-      // });
+      toast.error((err as IErrorResponse).message || "Something went wrong", {
+        id: toastId,
+      });
     }
   };
 

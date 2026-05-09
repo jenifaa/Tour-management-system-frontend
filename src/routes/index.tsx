@@ -13,9 +13,13 @@ import { createBrowserRouter, Navigate } from "react-router";
 import { adminSidebarItems } from "./adminSidebarItems";
 import { userSidebarItems } from "./userSidebarItems";
 import Unauthorized from "@/pages/Unauthorized";
-import  withAuth from "@/utils/withAuth";
+import withAuth from "@/utils/withAuth";
 import { role } from "@/constants/role";
 import type { TRole } from "@/types";
+import Tours from "@/pages/Tours";
+import TourDetails from "@/pages/TourDetails";
+import Booking from "@/pages/Booking";
+import Homepage from "@/pages/Homepage";
 
 const router = createBrowserRouter([
   {
@@ -23,13 +27,32 @@ const router = createBrowserRouter([
     path: "/",
     children: [
       {
+        Component: Homepage,
+        index: true,
+      },
+      {
         Component: About,
         path: "about",
+      },
+      {
+        Component: Tours,
+        path: "tours",
+      },
+      {
+        Component: TourDetails,
+        path: "tours/:id",
+      },
+      {
+        Component: Booking,
+        path: "booking",
       },
     ],
   },
   {
-    Component: withAuth(DashboardLayout,role.superAdmin as TRole || role.admin as TRole),
+    Component: withAuth(
+      DashboardLayout,
+      (role.superAdmin as TRole) || (role.admin as TRole),
+    ),
     path: "/admin",
 
     children: [
@@ -38,7 +61,7 @@ const router = createBrowserRouter([
     ],
   },
   {
-    Component: withAuth(DashboardLayout,role.user as TRole),
+    Component: withAuth(DashboardLayout, role.user as TRole),
     path: "/user",
     children: [
       { index: true, element: <Navigate to="/user/bookings" /> },
