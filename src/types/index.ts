@@ -1,7 +1,7 @@
+export type { ITourPackage } from "./tour.type";
 import type { ComponentType } from "react";
 
 export type { ISendOtp, ILogin, IVerifyOtp } from "./auth.type";
-
 export interface IResponse<T> {
   statusCode: number;
   success: boolean;
@@ -17,7 +17,6 @@ export interface ISidebarItems {
     component: ComponentType;
   }[];
 }
-
 
 export type TRole = "SUPER_ADMIN " | "ADMIN" | "USER";
 
