@@ -29,25 +29,33 @@ export default function TourFilters() {
     (item: { _id: string; name: string }) => ({
       label: item.name,
       value: item._id,
-    })
+    }),
   );
 
-  const tourTypeOptions = tourTypeData?.data?.map(
+  const tourTypeOptions = tourTypeData?.map(
     (item: { _id: string; name: string }) => ({
       label: item.name,
       value: item._id,
-    })
+    }),
   );
 
-  const handleDivisionChange = (value: string) => {
+  const handleDivisionChange = (value: string | null) => {
     const params = new URLSearchParams(searchParams);
-    params.set("division", value);
+    if (value) {
+      params.set("division", value);
+    } else {
+      params.delete("division");
+    }
     setSearchParams(params);
   };
 
-  const handleTourTypeChange = (value: string) => {
+  const handleTourTypeChange = (value: string | null) => {
     const params = new URLSearchParams(searchParams);
-    params.set("tourType", value);
+    if (value) {
+      params.set("tourType", value);
+    } else {
+      params.delete("tourType");
+    }
     setSearchParams(params);
   };
 
@@ -59,7 +67,7 @@ export default function TourFilters() {
   };
 
   return (
-    <div className="col-span-3 w-full h-[500px] border border-muted rounded-md p-5 space-y-4">
+    <div className="col-span-3 w-full h-125 border border-muted rounded-md p-5 space-y-4">
       <div className="flex justify-between items-center">
         <h1>Filters</h1>
         <Button size="sm" variant="outline" onClick={handleClearFilter}>
@@ -69,12 +77,18 @@ export default function TourFilters() {
       <div>
         <Label className="mb-2">Division to visit</Label>
         <Select
-          onValueChange={(value) => handleDivisionChange(value)}
+          // onValueChange={(value) => handleDivisionChange(value)}
+          onValueChange={handleDivisionChange}
           value={selectedDivision ? selectedDivision : ""}
           disabled={divisionIsLoading}
         >
           <SelectTrigger className="w-full">
-            <SelectValue />
+            <SelectValue>
+              {
+                divisionOption?.find((item) => item.value === selectedDivision)
+                  ?.label
+              }
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
@@ -96,17 +110,22 @@ export default function TourFilters() {
           disabled={tourTypeIsLoading}
         >
           <SelectTrigger className="w-full">
-            <SelectValue />
+            <SelectValue>
+              {
+                tourTypeOptions?.find((item) => item.value === selectedTourType)
+                  ?.label
+              }
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectLabel>Divisions</SelectLabel>
+              <SelectLabel>Tour Types</SelectLabel>
               {tourTypeOptions?.map(
                 (item: { value: string; label: string }) => (
                   <SelectItem key={item.value} value={item.value}>
                     {item.label}
                   </SelectItem>
-                )
+                ),
               )}
             </SelectGroup>
           </SelectContent>
