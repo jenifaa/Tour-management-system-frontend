@@ -21,7 +21,7 @@ export default function Booking() {
     if (!isLoading && !isError) {
       setTotalAmount(guestCount * tourData!.costFrom);
     }
-  }, [guestCount, tourData, isLoading, isError]);
+  }, [guestCount,totalAmount, tourData, isLoading, isError]);
 
   const incrementGuest = () => {
     setGuestCount((prv) => prv + 1);
