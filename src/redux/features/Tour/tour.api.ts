@@ -36,9 +36,10 @@ export const tourApi = baseApi.injectEndpoints({
       transformResponse: (response) => response.data,
     }),
     getTours: builder.query<ITourPackage[], unknown>({
-      query: () => ({
+      query: (params) => ({
         url: "/tour",
         method: "GET",
+        params: params,
       }),
       providesTags: ["TOUR"],
       transformResponse: (response: IResponse<ITourPackage[]>) => response.data,

@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { useCreateBookingMutation } from "@/redux/features/booking/booking.api";
 import { useGetToursQuery } from "@/redux/features/Tour/tour.api";
 
 import { useEffect, useState } from "react";
@@ -20,7 +21,7 @@ export default function Booking() {
     if (!isLoading && !isError) {
       setTotalAmount(guestCount * tourData!.costFrom);
     }
-  }, [guestCount, totalAmount, isLoading, isError]);
+  }, [guestCount, tourData, isLoading, isError]);
 
   const incrementGuest = () => {
     setGuestCount((prv) => prv + 1);
