@@ -124,14 +124,32 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
-          {data?.data?.email && <Button variant="outline">LogOut</Button>}
+          {/* {data?.data?.email && (
+            <Button onClick={handleLogout} variant="outline">
+              LogOut
+            </Button>
+          )}
           {!data?.data?.email && (
             <Button>
               <Link to="/login" className="w-full">
                 Login
               </Link>
             </Button>
-          )}
+          )} */}
+          <div>
+            {data?.data?.email && (
+              <Button onClick={handleLogout} variant="outline">
+                LogOut
+              </Button>
+            )}
+            {!data?.data?.email && (
+              <Button>
+                <Link to="/login" className="w-full ">
+                  Login
+                </Link>
+              </Button>
+            )}
+          </div>
         </div>
       )}
     </nav>

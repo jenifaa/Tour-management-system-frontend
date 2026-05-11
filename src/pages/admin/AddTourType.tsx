@@ -3,6 +3,15 @@ import {
   useRemoveTourTypeMutation,
 } from "@/redux/features/Tour/tour.api";
 import {
+  Pagination,
+  PaginationContent,
+  
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import {
   Table,
   TableBody,
   // TableCaption,
@@ -15,10 +24,13 @@ import { Button } from "@base-ui/react";
 import { Trash2 } from "lucide-react";
 import { AddTourTypeModal } from "@/components/modules/Admin/Tour/TourType/AddTourTypeModal";
 import { DeleteConfirmation } from "@/components/DeleteConfirmation";
+import { useState } from "react";
 // import { toast } from "sonner";
 function AddTourType() {
-  const { data } = useGetTourTypesQuery(undefined);
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const [limit, setLimit] = useState(5);
+  const { data } = useGetTourTypesQuery({ page: currentPage, limit });
+// console.log(data?.data);
   const [removeTourType] = useRemoveTourTypeMutation();
 
   const handleRemoveTourType = async (tourTypeId: string) => {
@@ -33,7 +45,7 @@ function AddTourType() {
     //   toast.success("Tour Type Removed")
     // }
   };
-
+  const totalPage = data?.meta?.totalPage || 1;
   return (
     <div className="w-full max-w-7xl mx-auto px-5">
       <div className="flex justify-between my-10">
@@ -51,7 +63,7 @@ function AddTourType() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data?.map((item: { _id: string; name: string }) => (
+            {data?.data?.map((item: { _id: string; name: string }) => (
               <TableRow>
                 <TableCell className="font-medium w-full">
                   {item?.name}
@@ -61,7 +73,7 @@ function AddTourType() {
                     onConfirm={() => handleRemoveTourType(item._id)}
                   >
                     {" "}
-                    <Button>
+                    <Button type="button">
                       <Trash2 className="w-4 h-4" />
                     </Button>
                   </DeleteConfirmation>
@@ -71,6 +83,73 @@ function AddTourType() {
           </TableBody>
         </Table>
       </div>
+      {/* <div className="flex justify-end my-5">
+        <div>
+          {" "}
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={() => setCurrentPge((prev) => prev - 1)}
+                />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink href="#">1</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationEllipsis />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() => setCurrentPge((prev) => prev + 1)}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
+      </div> */}
+      {totalPage > 1 && (
+        <div className="flex justify-end mt-4">
+          <div>
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    onClick={() => setCurrentPage((prev) => prev - 1)}
+                    className={
+                      currentPage === 1
+                        ? "pointer-events-none opacity-50"
+                        : "cursor-pointer"
+                    }
+                  />
+                </PaginationItem>
+                {Array.from({ length: totalPage }, (_, index) => index + 1).map(
+                  (page) => (
+                    <PaginationItem
+                      key={page}
+                      onClick={() => setCurrentPage(page)}
+                    >
+                      <PaginationLink isActive={currentPage === page}>
+                        {page}
+                      </PaginationLink>
+                    </PaginationItem>
+                  ),
+                )}
+                <PaginationItem>
+                  <PaginationNext
+                    onClick={() => setCurrentPage((prev) => prev + 1)}
+                    className={
+                      currentPage === totalPage
+                        ? "pointer-events-none opacity-50"
+                        : "cursor-pointer"
+                    }
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

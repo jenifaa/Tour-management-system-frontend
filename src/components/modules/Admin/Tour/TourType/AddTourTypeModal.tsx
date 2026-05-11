@@ -39,7 +39,7 @@ export function AddTourTypeModal() {
     <Dialog>
       <form>
         <DialogTrigger>
-          <Button className="rounded-md border-2 px-4 py-4">
+          <Button  className="rounded-md border-2 px-4 py-4">
             Add Tour Type
           </Button>
         </DialogTrigger>
