@@ -1,7 +1,10 @@
-
+import { useGetAllBookingsQuery } from "@/redux/features/booking/booking.api";
 
 export default function AllBookings() {
-  return (
-    <div>AllBookings</div>
-  )
+  const { data, isLoading } = useGetAllBookingsQuery(undefined);
+  console.log(data);
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+  return <div>AllBookings</div>;
 }
