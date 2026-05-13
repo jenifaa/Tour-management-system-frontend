@@ -21,10 +21,11 @@ import TourDetails from "@/pages/TourDetails";
 import Booking from "@/pages/Booking";
 import Homepage from "@/pages/Homepage";
 import Success from "@/pages/payment/Success";
+import Fail from "@/pages/payment/Fail";
+import Cancel from "@/pages/payment/Cancel";
 
 
-import Cancel from "@/pages/payment/cancel";
-import Fail from "@/pages/payment/fail";
+
 
 const router = createBrowserRouter([
   {
