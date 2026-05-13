@@ -1,6 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { useGetDivisionsQuery } from "@/redux/features/division/division.api";
-import { useGetToursQuery } from "@/redux/features/Tour/tour.api";
+import {
+  useGetToursQuery,
+  useGetTourTypesQuery,
+} from "@/redux/features/Tour/tour.api";
 
 import { format } from "date-fns";
 import { Link, useParams } from "react-router";
@@ -16,10 +19,20 @@ export default function TourDetails() {
     },
     {
       skip: !data,
-    }
+    },
+  );
+  const { data: tourTypeData } = useGetTourTypesQuery(
+    {
+      _id: data?.[0]?.tourType,
+      fields: "name",
+    },
+    {
+      skip: !data,
+    },
   );
 
-  console.log(divisionData);
+  // console.log(tourTypeData);
+  // console.log(divisionData);
 
   const tourData = data?.[0];
 
@@ -40,7 +53,7 @@ export default function TourDetails() {
           </div>
         </div>
         <div>
-          <Button >
+          <Button>
             <Link to={`/booking/${tourData?._id}`}>Book Now</Link>
           </Button>
         </div>
@@ -67,14 +80,14 @@ export default function TourDetails() {
               <strong>Dates:</strong>{" "}
               {format(
                 new Date(
-                  tourData?.startDate ? tourData?.startDate : new Date()
+                  tourData?.startDate ? tourData?.startDate : new Date(),
                 ),
-                "PP"
+                "PP",
               )}{" "}
               -{" "}
               {format(
                 new Date(tourData?.endDate ? tourData?.endDate : new Date()),
-                "PP"
+                "PP",
               )}
             </p>
             <p>
@@ -87,7 +100,7 @@ export default function TourDetails() {
               <strong>Division:</strong> {divisionData?.[0]?.name}
             </p>
             <p>
-              <strong>Tour Type:</strong> {tourData?.tourType}
+              <strong>Tour Type:</strong> {tourTypeData?.data?.[0]?.name}
             </p>
             <p>
               <strong>Min Age:</strong> {tourData?.minAge} years
