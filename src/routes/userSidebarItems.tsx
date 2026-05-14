@@ -2,6 +2,7 @@
 
 import Bookings from "@/pages/user/Bookings";
 import MyProfile from "@/pages/user/MyProfile";
+
 import type { ISidebarItems } from "@/types";
 
 export const userSidebarItems : ISidebarItems[] = [

@@ -2,6 +2,7 @@ import AddDivision from "@/pages/admin/AddDivision";
 import AddTour from "@/pages/admin/AddTour";
 import AddTourType from "@/pages/admin/AddTourType";
 import AllBookings from "@/pages/admin/AllBookings";
+import MyProfile from "@/pages/user/MyProfile";
 // import Analytics from "@/pages/admin/Analytics";
 import type { ISidebarItems } from "@/types";
 import { lazy } from "react";
@@ -16,6 +17,11 @@ export const adminSidebarItems: ISidebarItems[] = [
         title: "Analytics",
         url: "/admin/analytics",
         component: Analytics,
+      },
+      {
+        title: "My Profile",
+        url: "/admin/profile",
+        component: MyProfile,
       },
     ],
   },

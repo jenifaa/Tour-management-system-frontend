@@ -27,6 +27,7 @@ import Cancel from "@/pages/payment/Cancel";
 
 
 
+
 const router = createBrowserRouter([
   {
     Component: App,
@@ -52,6 +53,7 @@ const router = createBrowserRouter([
         Component: withAuth(Booking),
         path: "booking/:id",
       },
+    
     ],
   },
   {
