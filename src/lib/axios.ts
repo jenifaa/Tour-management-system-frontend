@@ -1,5 +1,5 @@
 import config from "@/config";
-import axios from "axios";
+import axios, { type AxiosRequestConfig } from "axios";
 
 export const AxiosInstance = axios.create({
   baseURL: config.baseUrl,
@@ -31,17 +31,56 @@ AxiosInstance.interceptors.response.use(
   },
 );
 
+let isRefreshing = false;
+const pendingQueue: {
+  resolve: (value: unknown) => void;
+  reject: (value: unknown) => void;
+}[] = [];
+
+const processQueue = (error: unknown) => {
+  pendingQueue.forEach((promise) => {
+    if (error) {
+      promise.reject(error);
+    } else {
+      promise.resolve(null);
+    }
+  });
+};
+
 AxiosInstance.interceptors.response.use(
   (response) => {
     return response;
   },
-  (error) => {
+  async (error) => {
+    const originalRequest = error.config as AxiosRequestConfig;
+
     if (
       error.response.status === 500 &&
-      error.response.message === "jwt expired"
+      error.response.data.message === "jwt expired"
     ) {
       console.log("Your token is expired");
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          pendingQueue.push({ resolve, reject });
+        })
+          .then(() => AxiosInstance(originalRequest))
+          .catch((error) => Promise.reject(error));
+      }
+      isRefreshing = true;
+
+      try {
+        const res = await AxiosInstance.post("/auth/refresh-token");
+        processQueue(null);
+
+        return AxiosInstance(originalRequest);
+      } catch (err) {
+        processQueue(err);
+        return Promise.reject(err);
+      } finally {
+        isRefreshing = false;
+      }
     }
+
     return Promise.reject(error);
   },
 );
