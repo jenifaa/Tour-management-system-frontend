@@ -32,7 +32,8 @@ AxiosInstance.interceptors.response.use(
 );
 
 let isRefreshing = false;
-const pendingQueue: {
+
+let pendingQueue: {
   resolve: (value: unknown) => void;
   reject: (value: unknown) => void;
 }[] = [];
@@ -45,6 +46,7 @@ const processQueue = (error: unknown) => {
       promise.resolve(null);
     }
   });
+  pendingQueue = [];
 };
 
 AxiosInstance.interceptors.response.use(
@@ -52,13 +54,19 @@ AxiosInstance.interceptors.response.use(
     return response;
   },
   async (error) => {
-    const originalRequest = error.config as AxiosRequestConfig;
+    const originalRequest = error.config as AxiosRequestConfig & {
+      _retry: boolean;
+    };
 
     if (
       error.response.status === 500 &&
-      error.response.data.message === "jwt expired"
+      error.response.data.message === "jwt expired" &&
+      !originalRequest._retry
     ) {
       console.log("Your token is expired");
+
+      originalRequest._retry = true;
+
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           pendingQueue.push({ resolve, reject });
@@ -69,7 +77,7 @@ AxiosInstance.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const res = await AxiosInstance.post("/auth/refresh-token");
+        await AxiosInstance.post("/auth/refresh-token");
         processQueue(null);
 
         return AxiosInstance(originalRequest);
