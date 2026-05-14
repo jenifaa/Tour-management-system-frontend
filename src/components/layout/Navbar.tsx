@@ -52,7 +52,7 @@ export default function Navbar() {
     { to: "/admin", label: "Dashboard", role: role.admin },
     { to: "/admin", label: "Dashboard", role: role.superAdmin },
     { to: "/user", label: "Dashboard", role: role.user },
-    { to: "/user", label: "Dashboard", role: role.user },
+
   ];
   const handleLogout = () => {
     logout(undefined);
